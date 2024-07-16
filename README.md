@@ -1,12 +1,11 @@
 # Aides chrome浏览器插件：
 
 #### 介绍
-    个人用了好长时间的找视频素材的插件，视频链接获取原理：通过浏览器NetWork获取，本插件只是把NetWork里面的URL直接在浏览器中打开，现支持抖音，快手，其他家的会慢慢添加，使用方法：在视频播放详情页右击网页选择打开视频链接。
+    通过浏览器NetWork获取视频公共播放源，现支持抖音，快手！
 
 #### 软件架构
 chrome plugin:
-
-manifest_version: 3
+    manifest_version: 3
 
 #### 安装教程
 
