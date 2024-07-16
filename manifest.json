@@ -1,0 +1,50 @@
+{
+    "name": "Aides",
+    "description": "打工人的助手 V1.24.07.6",
+    "version": "1.24.07.6",
+    "manifest_version": 3,
+    "homepage_url": "https://gitee.com/qzze/aides",
+    "action": {
+        "default_title": "Aides"
+    },
+    "icons": {
+        "40": "images/ico.png",
+        "48": "images/ico.png",
+        "128": "images/ico.png"
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "activeTab",
+        "contextMenus",
+        "cookies",
+        "webRequest"
+    ],
+    "host_permissions": [
+        "https://www.douyin.com/video/*",
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "./js/service_worker.js"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "js/DyVo.js"
+            ],
+            "matches": [
+                "https://www.douyin.com/video/*"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "js": [
+                "js/Global.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ],
+            "run_at": "document_start"
+        }
+    ]
+}
