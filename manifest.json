@@ -1,9 +1,9 @@
 {
     "name": "Aides",
-    "description": "打工人的助手 V1.24.07.6",
-    "version": "1.24.07.6",
+    "description": "打工人自己的助手",
+    "version": "1.24.07.17",
     "manifest_version": 3,
-    "homepage_url": "https://gitee.com/qzze/aides",
+    "homepage_url": "https://www.rsyncd.net/",
     "action": {
         "default_title": "Aides"
     },
