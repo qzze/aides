@@ -9,6 +9,8 @@
 #### 下载地址
     gitee：https://gitee.com/qzze/aides
 
+    github：https://github.com/qzze/aides
+
 #### 安装教程
 
 1.  下载或获取插件压缩包：‌首先，‌你需要从可信赖的来源下载或获取用于本地安装的谷歌插件扩展压缩包。‌确保来源的安全性，‌以避免下载恶意软件。‌
