@@ -8,7 +8,7 @@ chrome plugin:
     manifest_version: 
     
 #### 下载地址
-    gitee：[https://gitee.com/qzze/aides]
+    gitee：[https://gitee.com/qzze/aides](https://gitee.com/qzze/aides)
 
 #### 安装教程
 
