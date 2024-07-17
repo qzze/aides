@@ -1,8 +1,7 @@
 //获取请求源
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
+chrome.webRequest.onBeforeRequest.addListener((details) => {
     //缓存时间
     var time = (new Date()).getTime() / 1000 + (3600 * 1);
-    // console.log(details);
     if (details.url.includes("douyin.com/aweme/v1/web/aweme/detail")) {
         //发现长时间不操作，变量会失效，存COOKIES
         chrome.cookies.set({
@@ -12,11 +11,13 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
             domain: ".douyin.com",
             path: "/",
             expirationDate: time
+        }, () => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+            }
         });
         MenuAdd();
-        return;
-    }
-    if (details.type == "media" && (!details.initiator.includes("douyin"))) {
+    } else if (details.type == "media" && (!details.initiator.includes("douyin"))) {
         //发现长时间不操作，变量会失效，存COOKIES
         chrome.cookies.set({
             url: details.initiator,
@@ -25,23 +26,25 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
             domain: details.initiator.slice(details.initiator.indexOf(".")),
             path: "/",
             expirationDate: time
+        }, () => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+            }
         });
         MenuAdd();
-        return;
     }
 }, { 'urls': ["<all_urls>"] });
 //首次安装扩展程序、将扩展程序更新到新版本触发
-// chrome.runtime.onInstalled.addListener(function (details) {
-// });
+chrome.runtime.onInstalled.addListener((details)=> {
+});
 
 //动态创建菜单，先清理所有菜单，如果有cookies，则建立菜单，2024年7月17日 13:34:04
 function MenuAdd() {
     // 查询匹配的标签页
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        //清理掉所有菜单
-        chrome.contextMenus.removeAll();
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         // console.log(tabs);
-        tabs.length
+        //清理掉菜单
+        chrome.contextMenus.removeAll();
         if (tabs.length > 0 && tabs[0].url.includes("http")) {
             //正则域名
             var match = tabs[0].url.match(/https?:\/\/[^\/]+/);
@@ -51,12 +54,15 @@ function MenuAdd() {
                 name: "aidesUrl",
             }, function (cookies) {
                 if (cookies != null) {
-                    Url = cookies.value
                     // console.log(cookies.value);
                     chrome.contextMenus.create({
                         contexts: ['all'],
                         title: "获取音视频源",
                         id: "net.rsyncd.aides2k",
+                    }, () => {
+                        if (chrome.runtime.lastError) {
+                            // console.error(chrome.runtime.lastError.message);
+                        }
                     });
                 }
             });
@@ -65,75 +71,61 @@ function MenuAdd() {
 }
 
 //创建标签页时触发
-chrome.tabs.onCreated.addListener(function () {
+chrome.tabs.onCreated.addListener(() => {
     MenuAdd();
 })
 
 //在窗口中的活动标签页发生变化时触发
-chrome.tabs.onActivated.addListener(function () {
+chrome.tabs.onActivated.addListener(() => {
     MenuAdd();
 })
 
 //当标签页与窗口分离时触发；例如，由于标签页在窗口之间移动。
-chrome.tabs.onDetached.addListener(function () {
+chrome.tabs.onDetached.addListener(() => {
     MenuAdd();
 })
 
 //点击回调都放到了统一一个地方监听。
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener((info) => {
     // console.log(tab)
-    //douyin
-    if (tab.url.includes("douyin.com")) {
-        //进入详情页去处理视频源
-        if (tab.url.includes("douyin.com/video")) {
+    // 查询匹配的标签页
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        //douyin
+        if (tabs[0].url.includes("douyin.com")) {
+            //进入详情页去处理视频源
+            if (tabs[0].url.includes("douyin.com/video")) {
+                //从cookies中读，存变更会消失
+                chrome.cookies.get({
+                    url: "https://www.douyin.com",
+                    name: "aidesUrl",
+                }, function (cookies) {
+                    //cookies 不为空则去获取高清视频源
+                    if (cookies != null) {
+                        // 向Content Scripts发送消息
+                        chrome.tabs.sendMessage(tabs[0].id, { from: "aweme", menuItemId: info.menuItemId, url: cookies.value });
+                    } else {
+                        // COokies 获取失败提示 向Content Scripts发送消息
+                        chrome.tabs.sendMessage(tabs[0].id, { from: "dy2k", menuItemId: info.menuItemId });
+                    }
+                })
+            } else {
+                //非视频详情页，比如说首页等直接报提醒
+                chrome.tabs.sendMessage(tabs[0].id, { from: "dy2kE", menuItemId: info.menuItemId });
+            }
+        } else {
+            //正则域名
+            var match = tabs[0].url.match(/https?:\/\/[^\/]+/);
             //从cookies中读，存变更会消失
             chrome.cookies.get({
-                url: "https://www.douyin.com",
+                url: match[0],
                 name: "aidesUrl",
             }, function (cookies) {
-                //cookies 不为空则去获取高清视频源
                 if (cookies != null) {
-                    Url = cookies.value
-                    // console.log(cookies.value);
-                    // 查询匹配的标签页
-                    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                        // 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "aweme", menuItemId: info.menuItemId, url: Url });
-                    });
-                } else {
-                    // COokies 获取失败提示
-                    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                        // 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "dy2k", menuItemId: info.menuItemId });
-                    });
+                    chrome.tabs.sendMessage(tabs[0].id, { from: "aidesUrl", menuItemId: info.menuItemId, url: cookies.value });
                 }
-            })
-        } else {
-            //非视频详情页，比如说首页等直接报提醒
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                // 向Content Scripts发送消息
-                chrome.tabs.sendMessage(tabs[0].id, { from: "dy2kE", menuItemId: info.menuItemId });
             });
         }
-    } else {
-        //正则域名
-        var match = tab.url.match(/https?:\/\/[^\/]+/);
-        //从cookies中读，存变更会消失
-        chrome.cookies.get({
-            url: match[0],
-            name: "aidesUrl",
-        }, function (cookies) {
-            if (cookies != null) {
-                Url = cookies.value
-                // console.log(cookies.value);
-                // 查询匹配的标签页
-                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                    // 向Content Scripts发送消息
-                    chrome.tabs.sendMessage(tabs[0].id, { from: "aidesUrl", menuItemId: info.menuItemId, url: Url });
-                });
-            }
-        });
-    }
+    });
 });
 
 
