@@ -5,7 +5,10 @@
 
 #### 软件架构
 chrome plugin:
-    manifest_version: 3
+    manifest_version: 
+    
+#### 下载地址
+    gitee：[https://gitee.com/qzze/aides]
 
 #### 安装教程
 
