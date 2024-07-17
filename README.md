@@ -4,12 +4,11 @@
     通过浏览器NetWork获取音乐和视频公共播放源，现支持抖音，快手等一切返回数据类型为Media的音视频，注：本插件暂不支持m3u8音视频！
 
 #### 软件架构
-chrome plugin:
-    manifest_version: 
+    chrome plugin: manifest_version: 3
     
 #### 下载地址
     gitee：https://gitee.com/qzze/aides
-    
+
 #### 安装教程
 
 1.  下载或获取插件压缩包：‌首先，‌你需要从可信赖的来源下载或获取用于本地安装的谷歌插件扩展压缩包。‌确保来源的安全性，‌以避免下载恶意软件。‌
@@ -48,6 +47,7 @@ chrome plugin:
 
 #### 声明
     本插件完全免费，请勿用于非法用途，一切后果由用户自行承担！
+
 #### 特技
 
 1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
