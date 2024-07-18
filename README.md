@@ -5,6 +5,9 @@
 
 #### 软件架构
     chrome plugin: manifest_version: 3
+
+#### 注意
+    插件完全使用chrome plugin v3 协议开发，因发现有些使用谷歌浏览器内核开发的浏览器对V3协议的兼容性不是太好，则建议大家使用最新版的chrome谷歌浏览器去使用本插件
     
 #### 下载地址
     gitee：https://gitee.com/qzze/aides
