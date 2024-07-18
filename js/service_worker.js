@@ -13,11 +13,12 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
             expirationDate: time
         }, () => {
             if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
+                // console.error(chrome.runtime.lastError.message);
             }
         });
         MenuAdd();
     } else if (details.type == "media" && (!details.initiator.includes("douyin"))) {
+        // console.log(details.url);
         //发现长时间不操作，变量会失效，存COOKIES
         chrome.cookies.set({
             url: details.initiator,
@@ -28,7 +29,7 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
             expirationDate: time
         }, () => {
             if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
+                // console.error(chrome.runtime.lastError.message);
             }
         });
         MenuAdd();
