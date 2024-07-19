@@ -36,7 +36,7 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
     }
 }, { 'urls': ["<all_urls>"] });
 //首次安装扩展程序、将扩展程序更新到新版本触发
-chrome.runtime.onInstalled.addListener((details)=> {
+chrome.runtime.onInstalled.addListener((details) => {
 });
 
 //动态创建菜单，先清理所有菜单，如果有cookies，则建立菜单，2024年7月17日 13:34:04
@@ -103,10 +103,10 @@ chrome.contextMenus.onClicked.addListener((info) => {
                     //cookies 不为空则去获取高清视频源
                     if (cookies != null) {
                         // 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "aweme", url: cookies.value});
+                        chrome.tabs.sendMessage(tabs[0].id, { from: "aweme", url: cookies.value });
                     } else {
                         // COokies 获取失败提示 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "dy2k"});
+                        chrome.tabs.sendMessage(tabs[0].id, { from: "dy2k" });
                     }
                 })
             } else {
@@ -127,6 +127,7 @@ chrome.contextMenus.onClicked.addListener((info) => {
             });
         }
     });
+
 });
 
 
