@@ -2,7 +2,26 @@
 chrome.webRequest.onBeforeRequest.addListener((details) => {
     //缓存时间
     var time = (new Date()).getTime() / 1000 + (3600 * 1);
-    if (details.url.includes("douyin.com/aweme/v1/web/aweme/detail")) {
+    if (details.url.includes("bilibili.com/x/player/online/total")) {
+        // console.log(details);
+        // 解析URL以获取查询参数
+        var url = new URL(details.url);
+        var searchParams = new URLSearchParams(url.search);
+        //发现长时间不操作，变量会失效，存COOKIES
+        chrome.cookies.set({
+            url: "https://www.bilibili.com",
+            name: "aidesUrl",
+            value: "https://api.bilibili.com/x/player/playurl?avid=" + searchParams.get("aid") + "&cid=" + searchParams.get("cid") + "&platform=html5&type=mp4",
+            domain: ".bilibili.com",
+            path: "/",
+            expirationDate: time
+        }, () => {
+            if (chrome.runtime.lastError) {
+                // console.error(chrome.runtime.lastError.message);
+            }
+        });
+        MenuAdd();
+    } else if (details.url.includes("douyin.com/aweme/v1/web/aweme/detail")) {
         //发现长时间不操作，变量会失效，存COOKIES
         chrome.cookies.set({
             url: "https://www.douyin.com",
@@ -18,7 +37,7 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
         });
         MenuAdd();
     } else if (details.type == "media" && (!details.initiator.includes("douyin"))) {
-        // console.log(details.url);
+        // console.log(details);
         //发现长时间不操作，变量会失效，存COOKIES
         chrome.cookies.set({
             url: details.initiator,
@@ -91,43 +110,20 @@ chrome.contextMenus.onClicked.addListener((info) => {
     // console.log(tab)
     // 查询匹配的标签页
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        //douyin
-        if (tabs[0].url.includes("douyin.com")) {
-            //进入详情页去处理视频源
-            if (tabs[0].url.includes("douyin.com/video")) {
-                //从cookies中读，存变更会消失
-                chrome.cookies.get({
-                    url: "https://www.douyin.com",
-                    name: "aidesUrl",
-                }, function (cookies) {
-                    //cookies 不为空则去获取高清视频源
-                    if (cookies != null) {
-                        // 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "aweme", url: cookies.value });
-                    } else {
-                        // COokies 获取失败提示 向Content Scripts发送消息
-                        chrome.tabs.sendMessage(tabs[0].id, { from: "dy2k" });
-                    }
-                })
+        //正则域名
+        var match = tabs[0].url.match(/https?:\/\/[^\/]+/);
+        //从cookies中读，存变更会消失
+        chrome.cookies.get({
+            url: match[0],
+            name: "aidesUrl",
+        }, function (cookies) {
+            if (cookies != null) {
+                chrome.tabs.sendMessage(tabs[0].id, { from: "success", tabs: tabs[0], domain: cookies.domain.slice(1), url: cookies.value });
             } else {
-                //非视频详情页，比如说首页等直接报提醒
-                chrome.tabs.sendMessage(tabs[0].id, { from: "dy2kE" });
+                chrome.tabs.sendMessage(tabs[0].id, { from: "error" });
             }
-        } else {
-            //正则域名
-            var match = tabs[0].url.match(/https?:\/\/[^\/]+/);
-            //从cookies中读，存变更会消失
-            chrome.cookies.get({
-                url: match[0],
-                name: "aidesUrl",
-            }, function (cookies) {
-                if (cookies != null) {
-                    chrome.tabs.sendMessage(tabs[0].id, { from: "aidesUrl", url: cookies.value });
-                }
-            });
-        }
+        });
     });
-
 });
 
 

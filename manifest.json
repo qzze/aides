@@ -1,7 +1,7 @@
 {
     "name": "Aides",
     "description": "打工人自己的助手",
-    "version": "1.24.07.17",
+    "version": "1.24.07.20",
     "manifest_version": 3,
     "homepage_url": "https://www.rsyncd.net/1645.html",
     "author": "doctor",
@@ -19,10 +19,10 @@
         "activeTab",
         "contextMenus",
         "cookies",
-        "webRequest"
+        "webRequest",
+        "declarativeNetRequest"
     ],
     "host_permissions": [
-        "https://www.douyin.com/video/*",
         "<all_urls>"
     ],
     "background": {
@@ -31,15 +31,7 @@
     "content_scripts": [
         {
             "js": [
-                "js/DyVo.js"
-            ],
-            "matches": [
-                "https://www.douyin.com/video/*"
-            ],
-            "run_at": "document_end"
-        },
-        {
-            "js": [
+                "js/Main.js",
                 "js/Global.js"
             ],
             "matches": [
