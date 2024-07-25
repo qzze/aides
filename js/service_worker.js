@@ -93,17 +93,22 @@ function MenuAdd() {
 //创建标签页时触发
 chrome.tabs.onCreated.addListener(() => {
     MenuAdd();
-})
+});
 
 //在窗口中的活动标签页发生变化时触发
 chrome.tabs.onActivated.addListener(() => {
     MenuAdd();
-})
+});
 
 //当标签页与窗口分离时触发；例如，由于标签页在窗口之间移动。
 chrome.tabs.onDetached.addListener(() => {
     MenuAdd();
-})
+});
+
+//在标签页缩放时触发 2024年7月25日 09:27:32
+chrome.tabs.onZoomChange.addListener(() => {
+    MenuAdd();
+});
 
 //点击回调都放到了统一一个地方监听。
 chrome.contextMenus.onClicked.addListener((info) => {
