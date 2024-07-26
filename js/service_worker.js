@@ -120,10 +120,10 @@ chrome.contextMenus.onClicked.addListener((info) => {
         //从cookies中读，存变更会消失
         chrome.cookies.get({
             url: match[0],
-            name: "aidesUrl",
+            name: "aidesUrl"
         }, function (cookies) {
             if (cookies != null) {
-                chrome.tabs.sendMessage(tabs[0].id, { from: "success", tabs: tabs[0], domain: cookies.domain.slice(1), url: cookies.value });
+                chrome.tabs.sendMessage(tabs[0].id, { from: "success", tabs: tabs[0], domain: match[0].slice(match[0].indexOf(".") + 1), url: cookies.value });
             } else {
                 chrome.tabs.sendMessage(tabs[0].id, { from: "error" });
             }
